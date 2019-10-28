@@ -1,0 +1,1305 @@
+
+
+
+<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+<script src="js/jquery-1.12.4.js" type="text/javascript"></script>
+<script src="js/jquery.blockUI.js" type="text/javascript"></script>
+<script src="js/bootstrap.min.js" type="text/javascript"></script>
+<script src="js/angular.js" type="text/javascript"></script>
+<script src="js/angular-block-ui.min.js" type="text/javascript"></script>
+<script src="js/ui-bootstrap-tpls-0.11.0.js" type="text/javascript"></script>
+<script src="js/ql.js" type="text/javascript"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <html>
+  <head>
+<!-- Start xDomain - Must be at the top inside <HEAD> element -->
+<!--[if lte IE 9]>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xdomain/0.7.5/xdomain.min.js"></script>
+<![endif]-->
+<!--[if lte IE 9]>
+<script>
+		xdomain.slaves({
+		"https://qlsso.my.vccs.edu": "/admin/resources/plugins/jPillora/proxy.html",
+		"https://pwms.my.vccs.edu": "/resources/plugins/jPillora/proxy.html",
+		"https://portal1.my.vccs.edu" : "/proxy.html",
+		"https://portal2.my.vccs.edu" : "/proxy.html",
+		"https://portal3.my.vccs.edu" : "/proxy.html",
+		"https://portal4.my.vccs.edu" : "/proxy.html",
+		"https://portal5.my.vccs.edu" : "/proxy.html"
+		});
+</script>
+<![endif]-->
+<!-- End xDomain -->
+<!-- base64.js - Polyfill for <=IE9 to support "window.btoa()" -->
+<!--[if lte IE 9]>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Base64/1.0.1/base64.min.js"></script>
+<![endif]-->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title> Virginia Community College System </title>
+<link rel="icon" href="images/vccs/favicon.ico" type="image/x-icon"/> 
+<link rel="shortcut icon" href="">
+<link href="libs/bootstrap_3.3.5/css/bootstrap.min.css" rel="stylesheet">
+  <link href="css/Roboto.css" rel="stylesheet">
+  <link href="css/custom-common.css" rel="stylesheet">
+  <link href="css/vccs.css?v=1.1" rel="stylesheet">
+
+<link href="https://qlsso.quicklaunchsso.com/admin/resources/rest/idp/css/resetPasswordPopup.css" rel="stylesheet" type="text/css" />
+        <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+ <script src="libs/jquery_1.11.3/jquery-1.11.3.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.blockUI/2.70/jquery.blockUI.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/notify/0.4.2/notify.min.js" type="text/javascript"></script>
+    <script src="libs/bootstrap_3.3.5/js/bootstrap.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.7/angular.min.js"></script>
+
+<!--<script type='text/javascript' src='js/jquery.cookie.js'></script>  -->
+  <!--[if lt IE 9]>
+        <script src="js/html5shiv.min.js"></script>
+        <script src="js/respond.min.js"></script>
+        <![endif]-->
+<script type="text/javascript">
+/*	jQuery(function(){
+        jQuery("#loginForm").submit(function(){
+                jQuery("#submitButton").val('Verifying Credentials...');
+                jQuery("#submitButton" ).animate({width: "100%" }, 500 );
+    });
+  
+*/	
+	</script>
+
+<script type="text/javascript">
+function getParameterByName(name, url) {
+         if (!url) url = window.location.href;
+         name = name.replace(/[\[\]]/g, "\\$&");
+         var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+         results = regex.exec(url);
+         if (!results) return null;
+         if (!results[2]) return '';
+         return decodeURIComponent(results[2].replace(/\+/g, " "));
+};
+
+
+function setCookie(cname, cvalue) {
+    document.cookie = cname + "=" + cvalue +";domain=.vccs.edu;path=/";    
+};
+
+function getCookie(cname) {
+    var name = cname + "=";
+    var ca = document.cookie.split(';');
+    for(var i = 0; i < ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0) == ' ') {
+            c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+            return c.substring(name.length, c.length);
+        }
+    }
+    return "";
+};
+
+var deleteCookie = function(name) {
+    document.cookie = name + '=;expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+};
+
+var wctx = getParameterByName("wctx");
+
+console.log(document.referrer);
+function getTenantId() {
+        var storageAvailable = false;
+        if (typeof(Storage) !== "undefined")
+                storageAvailable = true;
+
+        var currentReferrer = document.referrer;
+        if (currentReferrer.indexOf('/home/') != -1 && storageAvailable) {
+                sessionStorage.setItem("currentReferrer", currentReferrer);
+        }
+        if (storageAvailable) {
+                var ref = sessionStorage.getItem("currentReferrer");
+                if (ref !== null) {
+                        return ref.split('/home/')[1];
+                }
+        }
+}
+var vccsTenantId = getTenantId();
+
+var referrer = "";
+if (typeof vccsTenantId === 'undefined' || vccsTenantId == null || vccsTenantId == '') {
+        // do nothing for now
+} else {
+        if (vccsTenantId == 4) {
+                console.log("tenant found as -- " + vccsTenantId);
+                referrer = "vccs";
+        } else if (vccsTenantId == 10) {
+                referrer = "brcc";
+        } else if (vccsTenantId == 11) {
+                referrer = "cvcc";
+        } else if (vccsTenantId == 26) {
+                referrer = "dslcc";
+        } else if (vccsTenantId == 29) {
+                referrer = "phcc";
+        } else if (vccsTenantId == 30) {
+                referrer = "pvcc";
+        } else if (vccsTenantId == 31) {
+                referrer = "rcc";
+        } else if (vccsTenantId == 32) {
+                referrer = "vwcc";
+        } else if (vccsTenantId == 21) {
+                referrer = "srcc";
+        } else if (vccsTenantId == 34) {
+                referrer = "dcc";
+        } else if (vccsTenantId == 37) {
+                referrer = "jtcc";
+        } else if (vccsTenantId == 40) {
+                referrer = "mecc";
+        } else if (vccsTenantId == 43) {
+                referrer = "nrcc";
+        } else if (vccsTenantId == 46) {
+                referrer = "pdcc";
+        } else if (vccsTenantId == 47) {
+                referrer = "vhcc";
+        } else if (vccsTenantId == 48) {
+                referrer = "wcc";
+        } else if (vccsTenantId == 51) {
+                referrer = "nvcc";
+        } else if (vccsTenantId == 52) {
+                referrer = "escc";
+        } else if (vccsTenantId == 53) {
+                referrer = "svcc";
+        } else if (vccsTenantId == 56) {
+                referrer = "swcc";
+        } else if (vccsTenantId == 59) {
+                referrer = "tcc";
+        } else if (vccsTenantId == 7) {
+                referrer = "gcc";
+        } else if (vccsTenantId == 60) {
+                referrer = "lfcc";
+        } else if (vccsTenantId == 63) {
+                referrer = "tncc";
+        }
+}
+
+if (referrer == "") {
+        var referrer = getCookie("getReferer");
+}
+if(referrer == "" || referrer == undefined || referrer == null) {
+	setCookie("getReferer", "vccs");
+	referrer = "vccs";
+} else if(referrer.indexOf("brcc") != -1 && referrer == "brcc") {
+	document.writeln('<link rel="stylesheet" type="text\/css" href="\/authenticationendpoint\/css\/brcc.css?v=1.1" \/>');
+} else if(referrer.indexOf("cvcc") != -1 && referrer == "cvcc") {
+        document.writeln('<link rel="stylesheet" type="text\/css" href="\/authenticationendpoint\/css\/cvcc.css?v=1.1" \/>');
+} else if(referrer.indexOf("phcc") != -1 && referrer == "phcc") {
+        document.writeln('<link rel="stylesheet" type="text\/css" href="\/authenticationendpoint\/css\/phcc.css?v=1.1" \/>');
+} else if(referrer.indexOf("dslcc") != -1 && referrer == "dslcc") {
+        document.writeln('<link rel="stylesheet" type="text\/css" href="\/authenticationendpoint\/css\/dslcc.css?v=1.1" \/>');
+} else if(referrer.indexOf("pvcc") != -1 && referrer == "pvcc") {
+        document.writeln('<link rel="stylesheet" type="text\/css" href="\/authenticationendpoint\/css\/pvcc.css?v=1.1" \/>');
+} else if(referrer.indexOf("rcc") != -1 && referrer == "rcc") {
+        document.writeln('<link rel="stylesheet" type="text\/css" href="\/authenticationendpoint\/css\/rcc.css?v=1.1" \/>');
+} else if(referrer.indexOf("vwcc") != -1 && referrer == "vwcc") {
+        document.writeln('<link rel="stylesheet" type="text\/css" href="\/authenticationendpoint\/css\/vwcc.css?v=1.1" \/>');
+} else if(referrer.indexOf("dcc") != -1 && referrer == "dcc") {
+        document.writeln('<link rel="stylesheet" type="text\/css" href="\/authenticationendpoint\/css\/dcc.css?v=1.1" \/>');
+} else if(referrer.indexOf("jtcc") != -1 && referrer == "jtcc") {
+        document.writeln('<link rel="stylesheet" type="text\/css" href="\/authenticationendpoint\/css\/jtcc.css?v=1.1" \/>');
+} else if(referrer.indexOf("mecc") != -1 && referrer == "mecc") {
+        document.writeln('<link rel="stylesheet" type="text\/css" href="\/authenticationendpoint\/css\/mecc.css?v=1.1" \/>');
+} else if(referrer.indexOf("nrcc") != -1 && referrer == "nrcc") {
+        document.writeln('<link rel="stylesheet" type="text\/css" href="\/authenticationendpoint\/css\/nrcc.css?v=1.1" \/>');
+}else if(referrer.indexOf("pdcc") != -1 && referrer == "pdcc") {
+        document.writeln('<link rel="stylesheet" type="text\/css" href="\/authenticationendpoint\/css\/pdcc.css?v=1.4" \/>');
+}else if(referrer.indexOf("vhcc") != -1 && referrer == "vhcc") {
+        document.writeln('<link rel="stylesheet" type="text\/css" href="\/authenticationendpoint\/css\/vhcc.css?v=1.1" \/>');
+}else if(referrer.indexOf("wcc") != -1 && referrer == "wcc") {
+        document.writeln('<link rel="stylesheet" type="text\/css" href="\/authenticationendpoint\/css\/wcc.css?v=1.1" \/>');
+}else if(referrer.indexOf("escc") != -1 && referrer == "escc") {
+        document.writeln('<link rel="stylesheet" type="text\/css" href="\/authenticationendpoint\/css\/escc.css?v=1.1" \/>');
+}else if(referrer.indexOf("svcc") != -1 && referrer == "svcc") {
+        document.writeln('<link rel="stylesheet" type="text\/css" href="\/authenticationendpoint\/css\/svcc.css?v=1.1" \/>');
+}else if(referrer.indexOf("swcc") != -1 && referrer == "swcc") {
+        document.writeln('<link rel="stylesheet" type="text\/css" href="\/authenticationendpoint\/css\/swcc.css?v=1.2" \/>');
+}else if(referrer.indexOf("tcc") != -1 && referrer == "tcc") {
+        document.writeln('<link rel="stylesheet" type="text\/css" href="\/authenticationendpoint\/css\/tcc.css?v=1.1" \/>');
+}else if(referrer.indexOf("gcc") != -1 && referrer == "gcc") {
+        document.writeln('<link rel="stylesheet" type="text\/css" href="\/authenticationendpoint\/css\/gcc.css?v=1.1" \/>');
+}else if(referrer.indexOf("srcc") != -1 && referrer == "srcc") {
+        document.writeln('<link rel="stylesheet" type="text\/css" href="\/authenticationendpoint\/css\/srcc.css?v=1.1" \/>');
+}else if(referrer.indexOf("lfcc") != -1 && referrer == "lfcc") {
+        document.writeln('<link rel="stylesheet" type="text\/css" href="\/authenticationendpoint\/css\/lfcc.css?v=1.1" \/>');
+}else if(referrer.indexOf("tncc") != -1 && referrer == "tncc") {
+        document.writeln('<link rel="stylesheet" type="text\/css" href="\/authenticationendpoint\/css\/tncc.css?v=1.1" \/>');
+}else if(referrer.indexOf("nvcc") != -1 && referrer == "nvcc") {
+        document.writeln('<link rel="stylesheet" type="text\/css" href="\/authenticationendpoint\/css\/nvcc.css?v=1.1" \/>');
+}
+
+// If 'wctx' is not found it means we are on this page after logout, and logout has an issue to fix that we are redirecting back to the current tenant
+if(wctx == null) {
+	var type = getParameterByName("type");
+	// Checking for SAML based application and prevent them from gets redirected
+	if(type === 'samlsso')  {
+		console.log("SAMLizing the app..");
+		//do nothing
+	} else {
+	if(referrer == "vccs")
+		window.location = "https://my.vccs.edu";
+	if(referrer == "brcc")
+		window.location = "https://br.my.vccs.edu";
+	if(referrer == "cvcc")
+		window.location = "https://cvcc.my.vccs.edu";
+	if(referrer == "phcc")
+                window.location = "https://ph.my.vccs.edu";
+	if(referrer == "dslcc")
+                window.location = "https://dl.my.vccs.edu";
+	if(referrer == "pvcc")
+                window.location = "https://pv.my.vccs.edu";
+	if(referrer == "rcc")
+                window.location = "https://rcc.my.vccs.edu";
+	if(referrer == "vwcc")
+                window.location = "https://vw.my.vccs.edu";
+	if(referrer == "dcc")
+                window.location = "https://dcc.my.vccs.edu";
+	if(referrer == "jtcc")
+                window.location = "https://jt.my.vccs.edu";
+	if(referrer == "mecc")
+                window.location = "https://me.my.vccs.edu";
+	if(referrer == "nrcc")
+                window.location = "https://nr.my.vccs.edu";
+	if(referrer == "pdcc")
+                window.location = "https://pc.my.vccs.edu";
+	if(referrer == "vhcc")
+                window.location = "https://vh.my.vccs.edu";
+	if(referrer == "wcc")
+                window.location = "https://wcc.my.vccs.edu";
+	if(referrer == "escc")
+                window.location = "https://es.my.vccs.edu";
+	if(referrer == "svcc")
+                window.location = "https://sv.my.vccs.edu";
+	if(referrer == "swcc")
+                window.location = "https://sw.my.vccs.edu";
+	if(referrer == "tcc")
+                window.location = "https://tcc.my.vccs.edu";
+ 	if(referrer == "gcc")
+                window.location = "https://gcc.my.vccs.edu";
+	if(referrer == "srcc")
+                window.location = "https://jsr.my.vccs.edu";
+	if(referrer == "lfcc")
+                window.location = "https://lf.my.vccs.edu";
+	if(referrer == "tncc")
+                window.location = "https://tncc.my.vccs.edu";
+	if(referrer == "nvcc")
+                window.location = "https://nvcc.my.vccs.edu";
+
+	}
+}
+
+</script>
+
+
+
+
+  </head>
+  <body class="login" ng-app="vccsApp" ng-controller="VCCSCtrl">
+  
+  <!-- header -->
+  <header class="header header-default">
+    <div class="container-fluid" style="display:none;">
+      <div class="pull-left brand float-remove-xs text-center-xs"> <img src="images/midland/midland_logo.png" alt="Midland University" title="Midland University" class="midlandlogo">
+
+        <input type="hidden" id="tenantDomain" value="carbon.super"/>
+      </div>
+    </div>
+  </header>
+  
+  <!-- page content -->
+  <div class="container-fluid body-wrapper">
+    <div class="row">
+      <div class="col-md-12"> 
+        
+        <!-- content -->
+        <div class="container col-centered wr-content wr-login col-centered midlandlogin padding-none ">
+
+<div class="box fl-panel ">
+<div class=" brand float-remove-xs text-center-xs">
+<img src="images/vccs/logo.png" alt="VCCS" title="VCCS" class="wellslogo"> 
+<input id="tenantDomain" value="" type="hidden">
+</div>
+
+          <div class="boarder-all ">
+            <div class="clearfix"></div>
+            <div class= login-form">
+              
+              
+              
+
+
+
+
+
+<form action="../commonauth" method="post" id="loginForm">
+
+    
+
+    
+      <div class="alert alert-danger" id="error-msg" style="display:none;"></div>
+    
+    <div ng-cloak ng-show="isAccountExpired" class="alert alert-danger" id="error-msg">
+    Your account has been expired.
+    </div>
+    <div ng-cloak ng-show="isPasswordExpire" class="alert alert-danger" id="error-msg">
+        Your password has expired and must be changed.
+    </div>
+    <div ng-cloak ng-show="isAccountLocked && accountUnlockTime >= 0" class="alert alert-danger" id="error-msg">
+        Your account has been locked. Please wait for <span ng-if="accountUnlockTime != 0"><b><span ng-bind="accountUnlockTime"></span></b> minutes</span> <span ng-if="accountUnlockTime == 0">few moments</span> and try again or contact your administrator.
+    </div>
+    <div ng-cloak ng-show="isAccountLocked && accountUnlockTime == undefined " class="alert alert-danger" id="error-msg">
+        Your account has been locked. Please send an email to the <a href="mailto:helpdesk@vccs.edu?Subject=Locked Account">Help Desk</a> with your full name and date of birth.
+    </div>
+    <div ng-cloak ng-show="isAccountDisabled" class="alert alert-danger" id="error-msg">
+    Your account has been disabled. Please send an email to the <a href="mailto:helpdesk@vccs.edu?Subject=Disabled Account">Help Desk</a> with your full name and date of birth.
+    </div>
+
+    <div class="box-row fl-controls-left">
+	<label for="username" class="position">My Username</label>
+        <input id="username" name="username" type="hidden" class="form-control" tabindex="0"
+               placeholder="Username">
+	<input id="username1" name="username1" type="text" class="form-control" tabindex="0"
+               placeholder="Username">
+    </div>
+    <div class="box-row fl-controls-left ">
+	<label for="password" class="position">My Password</label>
+        <input id="password" name="password" type="password" class="form-control"
+               placeholder="Password">
+    </div>
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 form-group" style="display:none;">
+        <input type="hidden" name="sessionDataKey" value='6f4e96c1-532c-472d-b9df-c5a13c74dd18'/>
+    </div>
+
+    <div class="submit-box">
+        <div class="checkbox">
+            <label>
+                <input type="checkbox" id="chkRemember" name="chkRemember"> Remember me on this computer
+            </label>
+        </div>
+        <br>
+
+        <div class="form-actions">
+            <!-- <button
+                    class="wr-btn grey-bg col-xs-12 col-md-12 col-lg-12 uppercase font-extra-large"
+                    type="submit">Sign in
+            </button> -->
+	     <button
+                    class="wr-btn grey-bg font-extra-large"
+                    type="button" id="submitButton" ng-click="doSubmit()">SIGN IN
+            </button>
+		<div ng-show="isFromQL == true" id="quick-links">
+<a title="Forgot Password" ng-href="https://pwms.my.vccs.edu/api/open/showOpenChangePassword?tenantDomain={{tenantDomain}}&returnUrl={{returnUrl}}" id="forgot-password">Forgot Password </a> | <a title="Forgot Username" ng-href="https://portal1-ql.my.vccs.edu/web/{{communityName}}/lookup-username" id="forgot-username">Forgot Username</a>
+</div>
+        <div ng-show="isFromQL == false" id="quick-links">
+<a title="Forgot Password" ng-href="https://portal{{clusterNode}}.my.vccs.edu/web/{{communityName}}/{{forgotPwdLink}}-password" id="forgot-password">Forgot Password </a> | <a title="Forgot Username" ng-href="https://portal{{clusterNode}}.my.vccs.edu/web/{{communityName}}/lookup-username" id="forgot-username">Forgot Username</a>
+</div>
+	
+
+        </div>
+    </div>
+
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 form-group">
+
+        
+    </div>
+    <div class="clearfix"></div>
+
+<!-- Modal start -->
+			<link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro"
+				rel="stylesheet">
+			<div class="modal fade" data-backdrop="static" id="updatePwdModal"
+				role="dialog" style="z-index: 1050 !important">
+				<div class="modal-dialog"
+					style="z-index: 1050 !important; top: 10% !important;">
+					<!-- Modal content start-->
+					<div class="modal-content requestapp">
+						<div class="modal-header clearfix">
+							<div class="col-md-12">
+								<button id="close-button" type="button" ng-click="closeDialog()"
+									class="close" data-dismiss="modal" aria-hidden="true"
+									style="padding: 4px;">&times;</button>
+								<p id="create-pwd" ng-show="!isPasswordChangeRequired" class="modal-title"
+									style="margin-bottom: 15px; text-align: center;">Please
+									create your new password</p>
+								<p id="reset-pwd" ng-show="isPasswordChangeRequired" class="modal-title"
+									style="margin-bottom: 15px; text-align: center;">Please
+									reset your password</p>
+								<span class="notify-user"></span>
+							</div>
+						</div>
+						<div class="modal-body contentarea">
+							<div class="clearfix">
+								<div class="col-md-12">
+									<p id="firstChar"
+										style="background-color: #ff940a; color: #fff;"
+										class="sphere circelpms" style="text-align: center;">
+										<span
+											style="position: relative; top: 16px; text-align: center; left: -2px;">{{userName
+											| limitTo: 1 | uppercase}}</span>
+									</p>
+									<p id="fullName"
+										style="position: relative; text-align: center; color: #ff940a">{{userName}}</p>
+								</div>
+							</div>
+							<div class="clearfix">
+								<div class="col-md-12">
+									<div class="form-group">
+										<input class="form-control" required type="password"
+											placeholder="Old password" name="oldPassword"
+											ng-model="oldPassword" />
+									</div>
+								</div>
+							</div>
+							<div class="clearfix">
+								<div class="col-md-12">
+									<div class="form-group">
+										<input class="form-control" required type="password"
+											placeholder="New password" name="newPassword"
+											ng-model="newPassword" />
+									</div>
+								</div>
+							</div>
+							<div class="clearfix">
+								<div class="col-md-12">
+									<div class="form-group">
+										<input class="form-control" required type="password"
+											placeholder="Repeat password" name="repeatPassword"
+											ng-model="repeatPassword" />
+									</div>
+								</div>
+							</div>
+							<div class="clearfix">
+								<div
+									ng-show="newPassword != repeatPassword && repeatPassword != null && newPassword != null"
+									class="col-md-12 msgbox box-danger text-left alert-dismissable fade in ">
+									<span class="close pull-left pad_cr"><i
+										class="fa fa-times-circle-o"></i></span><span class="w_text">Passwords
+										do not match.</span>
+								</div>
+							</div>
+							<div class="clearfix">
+								<div class="col-md-12">
+									<button id="updatePwdSubmit"
+										style="background-color: #ff940a; border: none;"
+										type="button" class="btn btn-primary signup-btn pull-left"
+										ng-disabled="oldPassword == null || newPassword == null || repeatPassword == null || newPassword != repeatPassword "
+										ng-click="updatePassword(oldPassword, newPassword, repeatPassword)">SUBMIT</button>
+								</div>
+							</div>
+							<div class="clearfix">
+								<div class="col-md-12">
+									<a href="javascript:void(0)" data-toggle="collapse"
+										data-target="#password_policies"
+										style="margin-top: 10px; display: block;" title="View Your Password Complexities">Password Requirements</a>
+									<div id="password_policies" class="collapse"
+										ng-bind-html="passwordPolicies"
+										style="height: 95px; overflow: auto; margin: auto;"></div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<!-- Modal content end -->
+				</div>
+			</div>
+			<!-- Modal end -->
+
+</form>
+
+<script src="https://signin.my.vccs.edu/REST/QuickLaunchWSO2HostToDomainMapScript" type="text/javascript"></script>
+
+              
+              
+              
+              
+  <div class="clearfix"></div>
+            </div>
+          </div>
+          <!-- /content --> 
+          </div>
+	<div id="loadhere">
+	<a class="loadcontent" id="tosContent">Loading...</a>
+
+        </div>
+      </div>
+      <!-- /content/body --> 
+      
+    </div>
+  </div>
+  
+  <!-- footer -->
+
+
+
+<footer class="toggle-footer">
+  <div class="fwrap">
+    <div class="fl">
+        <a target="_blank" href="http://www.vccs.edu/about/where-we-are/public-accountability/privacy-and-foia-policies/">Privacy Policy</a> |
+        <a href="https://support.vccs.edu/studentagreement.php" target="_blank">Terms of Service</a> |
+        <a href="https://support.vccs.edu/" target="_blank">Contact Us</a>
+
+
+    </div>
+    <div class="cl"></div>
+  </div>
+</footer>
+
+  <script>
+
+/*i	var loginForm = document.getElementById("loginForm");
+        loginForm.addEventListener("submit", function(evt){
+             var userInput = document.getElementById('username').value;
+             if (userInput && userInput.indexOf("@") == -1)
+                document.getElementById('username').value = userInput+'@quincycollege.edu';
+
+        });*/
+	
+        $(document).ready(function () {
+            $('.main-link').click(function () {
+                $('.main-link').next().hide();
+                $(this).next().toggle('fast');
+                var w = $(document).width();
+                var h = $(document).height();
+                $('.overlay').css("width", w + "px").css("height", h + "px").show();
+            });
+            $('[data-toggle="popover"]').popover();
+            $('.overlay').click(function () {
+                $(this).hide();
+                $('.main-link').next().hide();
+            });
+
+        });
+        function myFunction(key, value, name) {
+            var object = document.getElementById(name);
+            var domain = object.value;
+
+
+            if (domain != "") {
+                document.location = "../commonauth?idp=" + key + "&authenticator=" + value +
+                        "&sessionDataKey=6f4e96c1-532c-472d-b9df-c5a13c74dd18&domain=" +
+                        domain;
+            } else {
+                document.location = "../commonauth?idp=" + key + "&authenticator=" + value +
+                        "&sessionDataKey=6f4e96c1-532c-472d-b9df-c5a13c74dd18";
+            }
+        }
+
+        function handleNoDomain(key, value) {
+            document.location = "../commonauth?idp=" + key + "&authenticator=" + value +
+                    "&sessionDataKey=6f4e96c1-532c-472d-b9df-c5a13c74dd18";
+        }
+
+        $('#popover').popover({
+            html: true,
+            title: function () {
+                return $("#popover-head").html();
+            },
+            content: function () {
+                return $("#popover-content").html();
+            }
+        });
+   setTimeout(function(){
+            if(referrer == "brcc")
+            document.location.href = "https://br.my.vccs.edu";     
+	    if(referrer == "cvcc")
+            document.location.href = "https://cvcc.my.vccs.edu";
+	    if(referrer == "phcc")
+            document.location.href = "https://ph.my.vccs.edu";
+	    if(referrer == "dslcc")
+            document.location.href = "https://dl.my.vccs.edu";
+	    if(referrer == "pvcc")
+            document.location.href = "https://pv.my.vccs.edu";
+	    if(referrer == "rcc")
+            document.location.href = "https://rcc.my.vccs.edu";
+	    if(referrer == "vwcc")
+            document.location.href = "https://vw.my.vccs.edu";
+	    if(referrer == "dcc")
+            document.location.href = "https://dcc.my.vccs.edu";
+	    if(referrer == "jtcc")
+            document.location.href = "https://jt.my.vccs.edu";
+	    if(referrer == "mecc")
+            document.location.href = "https://me.my.vccs.edu";
+	    if(referrer == "nrcc")
+            document.location.href = "https://nr.my.vccs.edu";
+  	    if(referrer == "pdcc")
+            document.location.href = "https://pc.my.vccs.edu";
+	    if(referrer == "vhcc")
+            document.location.href = "https://vh.my.vccs.edu";
+	    if(referrer == "wcc")
+            document.location.href = "https://wcc.my.vccs.edu";
+	    if(referrer == "escc")
+            document.location.href = "https://es.my.vccs.edu";
+	    if(referrer == "svcc")
+            document.location.href = "https://sv.my.vccs.edu";
+	    if(referrer == "swcc")
+            document.location.href = "https://sw.my.vccs.edu";
+	    if(referrer == "tcc")
+            document.location.href = "https://tcc.my.vccs.edu";
+	    if(referrer == "gcc")
+            document.location.href = "https://gcc.my.vccs.edu";
+	    if(referrer == "srcc")
+            document.location.href = "https://jsr.my.vccs.edu";
+	    if(referrer == "lfcc")
+            document.location.href = "https://lf.my.vccs.edu";
+	    if(referrer == "tncc")
+            document.location.href = "https://tncc.my.vccs.edu";
+	    if(referrer == "nvcc")
+            document.location.href = "https://nvcc.my.vccs.edu";
+	    if(referrer == "vccs")
+            document.location.href = "https://my.vccs.edu";
+            }, 120000);
+    </script>
+
+<script>
+
+var vccsApp = angular.module("vccsApp", []);
+
+vccsApp.directive('ngEnter', function() {
+    return function(scope, element, attrs) {
+        element.bind("keydown keypress", function(event) {
+            if(event.which === 13) {
+                scope.$apply(function(){
+                    scope.$eval(attrs.ngEnter);
+                });
+                event.preventDefault();
+            }
+        });
+    };
+});
+
+
+vccsApp.controller('VCCSCtrl', ['$scope', '$http', '$sce',  function($scope, $http, $sce){
+
+$scope.vccsTenantId = vccsTenantId;
+$scope.isFromQL = false;
+if (typeof $scope.vccsTenantId !== 'undefined' && $scope.vccsTenantId != null && $scope.vccsTenantId != '')
+        $scope.isFromQL = true;
+
+$scope.communityName = "vccs";
+$scope.forgotPwdLink = "forgot";
+$scope.tenantDomain = "my.vccs.edu";
+$scope.returnUrl = "https://my.vccs.edu";
+if(referrer == "vccs") {
+	if(wctx != null) {
+		if(wctx.indexOf("portal1") != -1)
+			$scope.clusterNode = "1";
+		if(wctx.indexOf("portal2") != -1)
+                        $scope.clusterNode = "2";
+		if(wctx.indexOf("portal3") != -1)
+                        $scope.clusterNode = "3";
+		if(wctx.indexOf("portal4") != -1)
+                        $scope.clusterNode = "4";
+		if(wctx.indexOf("portal5") != -1)
+                        $scope.clusterNode = "5";
+	} else
+		$scope.clusterNode = "1";
+	
+	$scope.communityName = "vccs";
+        $scope.forgotPwdLink = "reset";
+}
+if(referrer == "brcc") {
+	$scope.clusterNode = "1";
+	$scope.communityName = "br";
+	$scope.tenantDomain = "brcc.edu";
+        $scope.returnUrl = "https://br.my.vccs.edu";
+} if(referrer == "cvcc") {
+	$scope.clusterNode = "1";
+	$scope.communityName = "cvcc";
+	$scope.tenantDomain = "cvcc.edu";
+        $scope.returnUrl = "https://cvcc.my.vccs.edu";
+} if(referrer == "phcc") {
+	$scope.clusterNode = "1";
+        $scope.communityName = "ph";
+	$scope.tenantDomain = "ph.edu";
+        $scope.returnUrl = "https://ph.my.vccs.edu";
+} if(referrer == "dslcc") {
+	$scope.clusterNode = "1";
+        $scope.communityName = "dl";
+	$scope.tenantDomain = "dl.edu";
+        $scope.returnUrl = "https://dl.my.vccs.edu";
+} if(referrer == "pvcc") {
+	$scope.clusterNode = "1";
+        $scope.communityName = "pvcc";
+	$scope.tenantDomain = "pv.edu";
+        $scope.returnUrl = "https://pv.my.vccs.edu";
+} if(referrer == "rcc") {
+	$scope.clusterNode = "1";
+        $scope.communityName = "rcc";
+	$scope.tenantDomain = "rcc.edu";
+        $scope.returnUrl = "https://rcc.my.vccs.edu";
+} if(referrer == "vwcc") {
+	$scope.clusterNode = "1";
+        $scope.communityName = "vw";
+	$scope.tenantDomain = "vw.edu";
+        $scope.returnUrl = "https://vw.my.vccs.edu";
+} if(referrer == "dcc") {
+	$scope.clusterNode = "2";
+        $scope.communityName = "dcc";
+	$scope.tenantDomain = "dcc.edu";
+        $scope.returnUrl = "https://dcc.my.vccs.edu";
+} if(referrer == "jtcc") {
+	$scope.clusterNode = "2";
+        $scope.communityName = "jt";
+	$scope.tenantDomain = "jt.edu";
+        $scope.returnUrl = "https://jt.my.vccs.edu";
+} if(referrer == "mecc") {
+	$scope.clusterNode = "2";
+        $scope.communityName = "me";
+	$scope.tenantDomain = "me.edu";
+        $scope.returnUrl = "https://me.my.vccs.edu";
+} if(referrer == "nrcc") {
+	$scope.clusterNode = "2";
+        $scope.communityName = "nr";
+	 $scope.tenantDomain = "nr.edu";
+        $scope.returnUrl = "https://nr.my.vccs.edu";
+} if(referrer == "pdcc") {
+	$scope.clusterNode = "2";
+        $scope.communityName = "pc";
+	$scope.tenantDomain = "pcc.edu";
+        $scope.returnUrl = "https://pc.my.vccs.edu";
+} if(referrer == "vhcc") {
+	$scope.clusterNode = "2";
+        $scope.communityName = "vh";
+	$scope.tenantDomain = "vh.edu";
+        $scope.returnUrl = "https://vh.my.vccs.edu";
+} if(referrer == "wcc") {
+	$scope.clusterNode = "2";
+        $scope.communityName = "wcc";
+	$scope.tenantDomain = "wcc.edu";
+        $scope.returnUrl = "https://wcc.my.vccs.edu";
+} if(referrer == "escc") {
+	$scope.clusterNode = "4";
+        $scope.communityName = "es";
+	$scope.tenantDomain = "es.edu";
+        $scope.returnUrl = "https://es.my.vccs.edu";
+} if(referrer == "svcc") {
+	$scope.clusterNode = "4";
+        $scope.communityName = "sv";
+	$scope.tenantDomain = "sv.edu";
+        $scope.returnUrl = "https://sv.my.vccs.edu";
+} if(referrer == "swcc") {
+	$scope.clusterNode = "4";
+        $scope.communityName = "sw";
+	$scope.tenantDomain = "sw.edu";
+        $scope.returnUrl = "https://sw.my.vccs.edu";
+} if(referrer == "tcc") {
+	$scope.clusterNode = "4";
+        $scope.communityName = "tcc";
+	$scope.tenantDomain = "tcc.edu";
+        $scope.returnUrl = "https://tcc.my.vccs.edu";
+} if(referrer == "gcc") {
+	$scope.clusterNode = "5";
+        $scope.communityName = "gcc";
+	$scope.tenantDomain = "gcc.edu";
+        $scope.returnUrl = "https://gcc.my.vccs.edu";
+} if(referrer == "srcc") {
+	$scope.clusterNode = "5";
+        $scope.communityName = "jsr";
+	$scope.tenantDomain = "jsr.edu";
+        $scope.returnUrl = "https://jsr.my.vccs.edu";
+} if(referrer == "lfcc") {
+	$scope.clusterNode = "5";
+        $scope.communityName = "lf";
+	$scope.tenantDomain = "lf.edu";
+        $scope.returnUrl = "https://lf.my.vccs.edu";
+} if(referrer == "tncc") {
+	$scope.clusterNode = "5";
+        $scope.communityName = "tncc";
+	$scope.tenantDomain = "tncc.edu";
+        $scope.returnUrl = "https://tncc.my.vccs.edu";
+} if(referrer == "nvcc") {
+	$scope.clusterNode = "3";
+        $scope.communityName = "nvcc";
+	$scope.tenantDomain = "nvcc.edu";
+        $scope.returnUrl = "https://nvcc.my.vccs.edu";
+}
+
+if(typeof referrer != 'undefined'  && referrer.indexOf("vccs") != -1 && referrer == "vccs") {
+$(".loadcontent").attr("href","https://my.vccs.edu/admin/open/accessTenantContent/dd8affe7-0f43-426e-93aa-13d05401c882");
+} else if(typeof referrer != 'undefined' && referrer.indexOf("brcc") != -1 && referrer == "brcc") {
+$(".loadcontent").attr("href","https://br.my.vccs.edu/admin/open/accessTenantContent/80d0c797-dc89-4732-b862-2826867dfd85");
+} else if(typeof referrer != 'undefined' && referrer.indexOf("cvcc") != -1 && referrer == "cvcc") {
+$(".loadcontent").attr("href","https://cvcc.my.vccs.edu/admin/open/accessTenantContent/62dc1b9a-bf42-4eaf-8db8-f4b367462f07");
+} else if(typeof referrer != 'undefined' && referrer.indexOf("phcc") != -1 && referrer == "phcc") {
+$(".loadcontent").attr("href","https://ph.my.vccs.edu/admin/open/accessTenantContent/a8d1c2fb-0af3-4dec-b3da-0b24437c2321");
+} else if(typeof referrer != 'undefined' && referrer.indexOf("dslcc") != -1 && referrer == "dslcc") {
+$(".loadcontent").attr("href","https://dl.my.vccs.edu/admin/open/accessTenantContent/c9e2f5e1-493a-4080-a601-b198b56212c5");
+} else if(typeof referrer != 'undefined' && referrer.indexOf("pvcc") != -1 && referrer == "pvcc") {
+$(".loadcontent").attr("href","https://pv.my.vccs.edu/admin/open/accessTenantContent/0f78e8af-93fd-4ef2-a417-380d1637f154");
+} else if(typeof referrer != 'undefined' && referrer.indexOf("rcc") != -1 && referrer == "rcc") {
+$(".loadcontent").attr("href","https://rcc.my.vccs.edu/admin/open/accessTenantContent/898e5eb8-d23a-42cc-b77b-08ccf89e4cf0");
+} else if(typeof referrer != 'undefined' && referrer.indexOf("vwcc") != -1 && referrer == "vwcc") {
+$(".loadcontent").attr("href","https://vw.my.vccs.edu/admin/open/accessTenantContent/9ef6ec1e-0158-474e-a1a7-1ad2e99cb629");
+} else if(typeof referrer != 'undefined' && referrer.indexOf("dcc") != -1 && referrer == "dcc") {
+$(".loadcontent").attr("href","https://dcc.my.vccs.edu/admin/open/accessTenantContent/98ca1729-e5a0-47c6-9bec-99ce67729fd8");
+} else if(typeof referrer != 'undefined' && referrer.indexOf("jtcc") != -1 && referrer == "jtcc") {
+$(".loadcontent").attr("href","https://jt.my.vccs.edu/admin/open/accessTenantContent/9ed14369-5a12-43b1-8bfa-e70410474edb");
+} else if(typeof referrer != 'undefined' && referrer.indexOf("mecc") != -1 && referrer == "mecc") {
+$(".loadcontent").attr("href","https://me.my.vccs.edu/admin/open/accessTenantContent/83547d37-687a-4736-802b-0654bee62e8a");
+} else if(typeof referrer != 'undefined' && referrer.indexOf("nrcc") != -1 && referrer == "nrcc") {
+$(".loadcontent").attr("href","https://nr.my.vccs.edu/admin/open/accessTenantContent/9d91ad60-15ae-4465-8e53-0c125700f2cb");
+}else if(typeof referrer != 'undefined' && referrer.indexOf("pdcc") != -1 && referrer == "pdcc") {
+$(".loadcontent").attr("href","https://pc.my.vccs.edu/admin/open/accessTenantContent/bb660828-5a5b-4a66-9223-f289cfb448f3");
+}else if(typeof referrer != 'undefined' && referrer.indexOf("vhcc") != -1 && referrer == "vhcc") {
+$(".loadcontent").attr("href","https://vh.my.vccs.edu/admin/open/accessTenantContent/acce8474-f345-4327-9e24-66295b5b0f7f");
+}else if(typeof referrer != 'undefined' && referrer.indexOf("wcc") != -1 && referrer == "wcc") {
+$(".loadcontent").attr("href","https://wcc.my.vccs.edu/admin/open/accessTenantContent/9382e9ac-885a-4148-9d6e-c6fb1ffc2563");
+}else if(typeof referrer != 'undefined' && referrer.indexOf("escc") != -1 && referrer == "escc") {
+$(".loadcontent").attr("href","https://es.my.vccs.edu/admin/open/accessTenantContent/94aeb1d8-049b-4b1b-b1fd-a9427f6efee1");
+}else if(typeof referrer != 'undefined' && referrer.indexOf("svcc") != -1 && referrer == "svcc") {
+$(".loadcontent").attr("href","https://sv.my.vccs.edu/admin/open/accessTenantContent/84ff99fd-09ee-4bfc-b4f9-6d263bd156ac");
+}else if(typeof referrer != 'undefined' && referrer.indexOf("swcc") != -1 && referrer == "swcc") {
+$(".loadcontent").attr("href","https://sw.my.vccs.edu/admin/open/accessTenantContent/d180cdf7-9fb1-4f1b-8530-39ec307215a7");
+}else if(typeof referrer != 'undefined' && referrer.indexOf("tcc") != -1 && referrer == "tcc") {
+$(".loadcontent").attr("href","https://tcc.my.vccs.edu/admin/open/accessTenantContent/564a9d95-4510-47c0-9770-06d9b6cf9371");
+}else if(typeof referrer != 'undefined' && referrer.indexOf("gcc") != -1 && referrer == "gcc") {
+$(".loadcontent").attr("href","https://gcc.my.vccs.edu/admin/open/accessTenantContent/a58b5e0c-6dd2-4c45-8a5b-77141283c03e");
+}else if(typeof referrer != 'undefined' && referrer.indexOf("srcc") != -1 && referrer == "srcc") {
+$(".loadcontent").attr("href","https://jsr.my.vccs.edu/admin/open/accessTenantContent/1a234d2c-73f2-4d8f-a564-613dfbd75a9a");
+}else if(typeof referrer != 'undefined' && referrer.indexOf("lfcc") != -1 && referrer == "lfcc") {
+$(".loadcontent").attr("href","https://lf.my.vccs.edu/admin/open/accessTenantContent/b68d6b5d-3464-40f1-9ce9-6e6afe964977");
+}else if(typeof referrer != 'undefined' && referrer.indexOf("tncc") != -1 && referrer == "tncc") {
+$(".loadcontent").attr("href","https://tncc.my.vccs.edu/admin/open/accessTenantContent/dd5f2c2a-2749-4e70-a884-3f7600a6f681");
+}else if(typeof referrer != 'undefined' && referrer.indexOf("nvcc") != -1 && referrer == "nvcc") {
+$(".loadcontent").attr("href","https://nvcc.my.vccs.edu/admin/open/accessTenantContent/c23e02ac-5bd7-47e6-bd2a-cbb6ba588f2d");
+}
+
+var container = $("#loadhere");
+var url = $(".loadcontent").attr("href");
+
+$http({
+	method: 'GET',
+	url: url
+}).then(function(success){
+	$scope.data = success.data;
+	container.html($scope.data);	// Add the HTML to its container
+	document.getElementsByTagName("BODY")[0].style.visibility = "visible";
+}, function(err){
+	console.log("error >>> " + err);
+});
+
+	// Form application..
+        // Important !!! - This context path must update according to whatever environment it is running on.
+        $scope.pmsContextPath = "https://pwms.my.vccs.edu";
+	$scope.showLoader = function() {
+                $.blockUI({ message: '<h1 style="position: absolute;top: 8%;left: 33%;opacity: 0.9;border-radius: 4px;padding: 8px;z-index: 1100 !important;"><img src="https://qlsso.quicklaunchsso.com/resources/images/Loading.gif" width="100px" height="100px"> <br> <span style="color:#000; z-index: 1100 !important">Loading</span> </h1>' });
+        }
+        $scope.hideLoader = function() {
+                $.unblockUI();
+        }
+        $scope.initUpdatePassword = function() {
+                if($scope.isFollowMFA == "true" && ($scope.isPasswordChangeRequired == "false" || $scope.isPasswordChangeRequired == false)) {
+                        $window.location.href = $scope.passwordResetUrl;
+                } else {
+                        $scope.oldPassword = null;
+                        $scope.newPassword = null;
+                        $scope.repeatPassword = null;
+                        $scope.getQlMiddlewareUrl();
+                }
+        }
+
+        $scope.updatePassword = function(o, n, r) {
+                if(o == null || n == null || r == null || n != r) {
+                        return;
+                }
+                $scope.showLoader();
+                $("div.blockUI.blockMsg.blockPage").css("border", "none");
+                $("div.blockUI.blockMsg.blockPage").css("z-index", "11000");
+                $("#updatePwdSubmit").attr("disabled", true);
+                $scope.oldP = window.btoa(o);
+                $scope.newP = window.btoa(n);
+                $http({
+                        url: $scope.pmsContextPath + '/api/open/updateUserPasswordFromIdp',
+                        method: 'POST',
+                        params: {'oldPassword': $scope.oldP, 'newPassword': $scope.newP, 'userName': $scope.userName, 'idpTenantDomain': $scope.idpTenantDomain, 'isPasswordChangeRequiredScreen': $scope.isPasswordChangeRequired, 'guid': $scope.guid}
+                }).then(function(success) {
+                        setTimeout(function() {
+                                if(success.data.passwordUpdated == true) {
+                                        $scope.isExpire = false;
+                                        $scope.hideLoader();
+                                        $(".notify-user").notify("You have successfully created your password.", "success");
+                                        setTimeout(function() {
+                                                setTimeout(function(){
+                            window.location.reload();
+                        }, 1500);
+                                        }, 1500);
+                                } else if(success.data.invalidCredentials == true){
+                                        $scope.hideLoader();
+                                        $(".notify-user").notify("The current password is incorrect", "error");
+                                } else if(success.data.accountExpires == true){
+                                        $scope.hideLoader();
+                                        $(".notify-user").notify("Account expires.", "error");
+                                } else if(success.data.accountDisabled == true){
+                                        $scope.hideLoader();
+                                        $(".notify-user").notify("Account disabled.", "error");
+                                } else {
+                                        $scope.hideLoader();
+                                        $(".notify-user").notify("Password requirements failed! Please set a new one.", "error");
+                                }
+                                $("#updatePwdSubmit").attr("disabled", false);
+                        }, 400);
+                }, function(error) {
+                        $("#close-button").click();
+                        $scope.hideLoader();
+                        alert("Error occured. ==> Failed to update password.");
+                });
+        }
+        $scope.getPasswordPolicies = function () {
+                $http({
+                        url: $scope.pmsContextPath + '/api/open/getPasswordPolicies',
+                        method: 'GET',
+                        params: {'idpTenantDomain': $scope.idpTenantDomain}
+                }).then(function(success) {;
+                        var html = success.data.passwordPolicies;
+                        $scope.passwordPolicies = $sce.trustAsHtml(html);
+                }, function(error) {
+                        console.log("Error occurred while getting 'Password Policy'. " + error);
+                });
+        }
+        $scope.getBrandingReady = function () {
+                $http({
+                        url: $scope.qlMiddlewareUrl + '/open/getTenantPreferenceWithoutImages/' + $scope.qlTenantId,
+                        method: 'GET'
+                }).then(function(success) {
+                        $("#create-pwd").css("color", success.data.formTextColor);
+                        $("#reset-pwd").css("color", success.data.formTextColor);
+                        $("#firstChar").css("background-color", success.data.formButtonColor);
+                        $("#firstChar").css("color", success.data.formButtonTextColor );
+                        $("#fullName").css("color", success.data.formTextColor);
+                        $(".modal-content").css("background-color", success.data.formBgColor);
+                        $("#updatePwdSubmit").css("background-color", success.data.formButtonColor);
+                        $("#updatePwdSubmit").css("color", success.data.formButtonTextColor );
+                        $("a").css("color", success.data.formTextColor);
+                        $("#password_policies").css("color", success.data.formTextColor);
+                        $("#updatePwdModal").modal('show');
+                        $scope.getPasswordPolicies();
+                        $scope.hideLoader();
+                }, function(error) {
+                        console.log("Error while getting branding ready!");
+                        $("#updatePwdModal").modal('show');
+                });
+        }
+        $scope.getQlMiddlewareUrl = function () {
+                $http({
+                        url: $scope.pmsContextPath + '/api/open/qlMiddlewareUrl',
+                        method: 'GET',
+                        transformResponse: function(data) {
+                                return data.toString();
+                        }
+                }).then(function(success) {
+                        $scope.qlMiddlewareUrl = success.data;
+                        if($scope.qlMiddlewareUrl !== null && $scope.qlMiddlewareUrl !== undefined && $scope.qlMiddlewareUrl !== '') {
+                                $scope.getBrandingReady();
+                        } else {
+                                $("#updatePwdModal").modal('show');
+                        }
+                }, function(error) {
+                        console.log("Error while getting ql middleware url!");
+                        $("#updatePwdModal").modal('show');
+                });
+        }
+        $scope.checkFollowMFAOnResetPassword = function() {
+                $http({
+                        url: $scope.pmsContextPath + '/api/open/checkFollowMFAOnResetPassword?userName=' + $scope.userName + "&idpTenantDomain=" + $scope.idpTenantDomain,
+                        method: 'GET'
+                }).then(function(success) {
+                        $scope.isFollowMFA = success.data.toString();
+                }, function(error) {
+                        console.log("Error while checking whether to follow MFA or not!")
+                });
+        }
+        $scope.doSubmit = function() {
+                $scope.username = $("#username1").val();
+                $scope.password = $("#password").val();
+                if($scope.username == '' || $scope.username == null || $scope.password == '' || $scope.password == null) {
+                        return;
+                }
+                $scope.userName = $scope.username;
+                $('#submitButton').prop('disabled', true);
+                if($scope.username.indexOf("@") != -1) {
+                        $scope.username.toString();
+                        var x = $scope.username.split("@");
+                        $scope.userName = x[0];
+                }
+                $scope.getParameterByName = function(name, url) {
+                    if (!url) url = window.location.href;
+                    name = name.replace(/[\[\]]/g, "\\$&");
+                    var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+                        results = regex.exec(url);
+                    if (!results) return null;
+                    if (!results[2]) return '';
+                    return decodeURIComponent(results[2].replace(/\+/g, " "));
+                }
+                $scope.idpTenantDomain = 'carbon.super';
+                                $scope.authModel = {
+    "userName":$scope.userName,
+    "password":$scope.password,
+    "tenantDomain": "my.vccs.edu"
+};
+setCookie('cas_must_warn_usr',$scope.userName)
+$http({
+    'url': $scope.pmsContextPath + '/api/open/authenticateUserAndReturnMessage',
+    'method': 'POST',
+    'headers': {
+        'Content-Type': 'application/json'
+    },
+    'data': $scope.authModel
+}).success(function (data) {
+   if (typeof data.message !== 'undefined' &&  data.message.indexOf("data 52e") != -1) {
+        clearPassMutualAuth();
+    } else {
+ $http({
+        url: $scope.pmsContextPath + '/api/open/computeUserAccount?userName=' + $scope.userName + "&idpTenantDomain=" + $scope.idpTenantDomain,
+        method: 'GET'
+        }).then(function(success) {
+        $scope.guid = success.data.guid;
+if(success.data.isPasswordExpire == true || success.data.isAccountLocked == true || success.data.isAccountDisabled || success.data.isPasswordChangeRequired == true || success.data.isAccountExpired == true) {
+$scope.isPasswordChangeRequired = false;
+/**if(success.data.isPasswordExpire == true){
+                                $scope.isPasswordExpire = true;
+                                setTimeout(function () {
+                                        window.location.href = "https://portal1.my.vccs.edu/web/vccs/change-your-password";
+                                }, 2000);
+                        }**/
+if(success.data.isAccountDisabled == true)
+$scope.isAccountDisabled = true;
+if(success.data.isAccountLocked == true) {
+$scope.isAccountLocked = true;
+if(typeof success.data.accountUnlockTime != undefined)
+$scope.accountUnlockTime = success.data.accountUnlockTime;
+}
+if (success.data.isAccountExpired == true) {
+        $scope.isAccountExpired = true;
+	$scope.initUpdatePassword();
+}
+/**if(success.data.isPasswordChangeRequired == true) {
+$scope.isPasswordChangeRequired = true;
+$scope.initUpdatePassword();
+} else {
+$scope.hideLoader();
+}**/
+
+if (success.data.isPasswordExpire  == true) {
+$scope.isPasswordExpire = true;
+$scope.initUpdatePassword();
+} else {
+$scope.hideLoader();
+}
+
+if (success.data.isPasswordChangeRequired == true) {
+$scope.isPasswordChangeRequired = true;
+$scope.isPasswordExpire = true;
+$scope.initUpdatePassword();
+} else {
+$scope.hideLoader();
+}
+
+$scope.qlTenantId = success.data.qlTenantId;
+$scope.passwordResetUrl = $scope.pmsContextPath + '/api/open/showOpenChangePassword?tenantDomain=' + success.data.tenantDomain + '&returnUrl=' + success.data.qlMiddlewareUrl + '/home/' + success.data.qlTenantId + '&resetPassword=true';
+$scope.checkFollowMFAOnResetPassword();
+} else
+clearPassMutualAuth();
+        });
+    }
+}, function (error) {
+        console.log("error");
+});
+        }
+
+
+        // ClearPassMutualLogin start
+        $(document).ready(function () {
+       //to prevent multiple binding
+        $(document).unbind("keyup").keyup(function(e){
+            var code = e.which; // recommended to use e.which, it's normalized across browsers
+            var isDisabled = $("#submitButton").is(':disabled');
+            if(code==13 && isDisabled == false) {
+                $("#submitButton").click();
+            }
+        });
+   });
+  function setError(errorText) {
+         alert(errorText);
+  }
+  function clearPassMutualAuth() {
+        document.getElementById('username').value = document.getElementById('username1').value;
+         var userName = document.getElementById("username").value;
+         userName = userName.replace(/\s/g, "");
+         var tenantDomain = document.getElementById("tenantDomain") == null ? undefined : document.getElementById("tenantDomain").value;
+        var passWord = document.getElementById("password").value;
+         if(userName === '' || passWord === '') {
+                return false;   // Prevent submit for empty fields
+         }
+        var nameParts = userName.split("@");
+         if (userName && userName.indexOf("@") == -1 && (undefined != tenantDomain) ) {
+            document.getElementById('username').value = userName+'@'+tenantDomain;
+            userName = document.getElementById("username").value;
+            nameParts = userName.split("@");
+         }
+        // Hiding original with a fake one to hide appended domain
+         /*var original = document.getElementById("username1");
+         var originalParent = original.parentElement;
+         original.style.display = "none";
+         original.style.width = "0px";
+         original.style.height = "0px";
+         // Now create a fake input to show
+         var e = document.createElement("input");
+         e.type = "text";
+         e.value = nameParts[0];
+         e.className = "form-control";
+         e.tabindex = 0;
+         e.placeholder = "Username";
+         e.id = "fakeInput";
+         originalParent.appendChild(e);
+         e.style.visibility = "visible";
+         e.style.padding = "8px 8px"
+         e.style.height = "42px";*/
+         if (nameParts.length == 2) {
+               var tenantDomain = nameParts[1];
+               var tenantHost = quickLaunchWSO2HostMap[tenantDomain];
+               if (undefined != tenantHost) {
+                      //if we have a mapped host name we should try to register the ClearPassMutualLogin attempt
+                      var casAuthUrl = "https://" + tenantHost + "/cas/ClearPassMutualLogin";
+                      var password = document.getElementById("password");
+
+                      var casAuthTimeOutMessage = 'ADFS/CAS Time out';
+                      var casAuthTimeOutMilliseconds = 25000;
+
+                      //First disable the logon button button
+                      var logonSpan = document.getElementById('submitButton');
+                      var logonOnclick = logonSpan.onclick;
+                      var logonOnkeypress = logonSpan.onkeypress;
+                      logonSpan.onclick = function () { return false; };
+                      logonSpan.onkeypress = function () { return false; };
+
+                      var callbackSignature = new Date().getTime().toString();
+                      //create an iframe to host the mutual authentication post form
+                      var casFrameName = 'casMutualAuthFrame_' + callbackSignature;
+                      var casFrameDiv = document.createElement("div");
+                      casFrameDiv.style.display = 'none';
+                      casFrameDiv.innerHTML = "<iframe width='0' height='0' name='" + casFrameName + "' id='" + casFrameName + "' src='about:blank' style='visibility:hidden;'></iframe>";
+                      document.body.appendChild(casFrameDiv);
+
+                      //now build a post form for use in the iframe with our username and password values
+                      var casFormName = 'casMutualAuthForm_' + callbackSignature;
+                      var casFormHtml = "<form method='POST' action='" + casAuthUrl + "' id='" + casFormName + "' name='" + casFormName + "' >";
+                      casFormHtml += "<input type='hidden' name='casUserName' value='" + userName + "'>";
+                      casFormHtml += "<input type='hidden' name='plainTextPassword' value='" + password.value + "'>";
+                      casFormHtml += "<input type='hidden' name='callbackSignature' value='" + callbackSignature + "'>";
+                      casFormHtml += "</form>";
+
+                      //now add the postform to the iframe
+                      var casFrame = document.getElementById(casFrameName);
+                      var casDocument = casFrame.contentDocument || casFrame.contentWindow.document;
+                      var casFormDiv = casDocument.createElement("div");
+                      casFormDiv.style.display = 'none';
+ casFormDiv.innerHTML = casFormHtml;
+                      if (casDocument.documentElement) {
+                             //Chrome, Firefox, Safari
+                             casDocument.documentElement.appendChild(casFormDiv);
+                      }
+                      else {
+                             //IE and Edge specific
+                             casDocument.appendChild(casFormDiv);
+                      }
+                      var casTimedOut = false;
+                      var casAuthForm = casDocument.getElementById(casFormName)
+                      var casTimeout = 0;
+                      if (casAuthTimeOutMilliseconds > 0) {
+                         casTimeout = window.setTimeout(function () {
+                                casTimedOut = true;
+                                logonSpan.onclick = logonOnclick;
+                                logonSpan.onkeypress = logonOnkeypress;
+                                setError(casAuthTimeOutMessage);
+                         }, casAuthTimeOutMilliseconds);
+                      }
+                      //setup a window listener to wait for our the confirmation message
+                     var eventOk = addEventHandler("message", window,
+                          //setup a window listener to wait for our the confirmation message
+                          function (event) {
+                              //verify that the origin is from the expected target
+                              var evtOrigin = event.origin || event.originalEvent.origin;
+                              evtOrigin = evtOrigin.toLowerCase();
+                              if (casAuthUrl.toLowerCase().indexOf(evtOrigin) === 0) {
+                                  //our callback sends the callbackSignature back as the
+                                  //text prefix to the data, that way we know its for this
+                                  //series of click events
+                                  if (event.data.indexOf(callbackSignature) === 0) {
+                                      if (casTimeout !== 0) {
+                                              window.clearTimeout(casTimeout);
+                                              casTimeout = 0;
+                                      }
+                                      if (!casTimedOut) {
+                                          var callBackMessage = event.data.replace(callbackSignature, '');
+                                          logonSpan.onclick = logonOnclick;
+                                          logonSpan.onkeypress = logonOnkeypress;
+                                          if (callBackMessage === '200') {
+                                                  document.forms['loginForm'].submit();
+                                          }
+                                          else {
+                                                  setError(callBackMessage);
+                                          }
+                                      }
+                                  }
+                              }
+                          });
+                      if (eventOk) {
+                          casAuthForm.submit();
+                      }
+                      else {
+                          //TODO
+                          setError("Incompatible browser");
+                      }
+                      return false;
+               } else { // Else for id domain name is undefined.
+                  document.forms['loginForm'].submit();
+                  return true;
+               }
+         } else { // else for if name parts
+          document.forms['loginForm'].submit();
+           //not a tenant user name, let form post as normal
+           return true;
+
+         }
+  }
+
+// Event handler for tracking the IE event handling issue.
+function addEventHandler(eventName, docElement, eventHandler) {
+      if (docElement.addEventListener) {  // W3C DOM
+          docElement.addEventListener(eventName, eventHandler, false);
+          return true;
+      }
+      else if (docElement.attachEvent) { // IE DOM
+          docElement.attachEvent("on" + eventName, eventHandler);
+          return true;
+      }
+      else {
+          return false;
+      }
+  }
+        // ClearPassMutualLogin ends
+
+
+}]);
+</script>
+
+  </body>
+  </html>
+
