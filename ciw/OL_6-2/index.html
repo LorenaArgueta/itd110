@@ -53,7 +53,8 @@ function setCheckedValue(radioObj, newValue) {
 <h3>JavaScript Get or Set Checked Radio Value</h3>
 
 
-<form name="radioExampleForm" method="get" action="" onsubmit="return false;">
+<form name="radioExampleForm" method="get"  onsubmit="return false;">
+
 <p>
 <label for="number0">
 <input type="radio" value="0" name="number" id="number0" /> Zero</label>
@@ -66,6 +67,7 @@ function setCheckedValue(radioObj, newValue) {
 &nbsp;<label for="number4">
 <input type="radio" value="4" name="number" id="number4" /> Four</label>
 </p>
+
 <p>
 <input type="button" onclick="alert('Checked value is: '+getCheckedValue(document.forms['radioExampleForm'].elements['number']));" value="Show Checked Value" />
 &nbsp;<input type="button" onclick="setCheckedValue(document.forms['radioExampleForm'].elements['number'], '2');" value="Set Checked to Two" />
